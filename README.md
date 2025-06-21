@@ -1,189 +1,274 @@
-# MARA Hackathon 2025
+# MARA Hackathon Optimization System
 
-JUNE 21, 2025
+An intelligent optimization engine that automatically finds the most profitable machine allocation for your mining/data center operations during the MARA Hackathon.
 
-FORT MASON - GALLERY 308, SAN FRANCISCO
+## 🚀 Features
 
-## API
+### Core Optimization
+- **Linear Programming Engine**: Uses advanced mathematical optimization to find the most profitable allocation
+- **Real-time Price Analysis**: Continuously monitors energy, hash, and token prices
+- **Power Constraint Management**: Ensures allocations never exceed your site's power capacity
+- **Profit Maximization**: Automatically calculates and optimizes for maximum profit
 
+### Smart Features
+- **Rebalancing Detection**: Only suggests changes when they provide significant improvements
+- **Risk Management**: Configurable risk tolerance and safety thresholds
+- **Performance Insights**: Detailed analysis of expected ROI, profit margins, and efficiency
+- **Continuous Operation**: Can run continuously with automatic periodic optimization
+
+### User Experience
+- **Beautiful CLI Interface**: Color-coded output with tables and clear metrics
+- **Interactive Mode**: Choose whether to apply optimizations or review first
+- **Comprehensive Logging**: Detailed logs for debugging and performance tracking
+- **Flexible Configuration**: Easy to customize optimization parameters
+
+## 📦 Installation
+
+1. **Install Dependencies**:
+   ```bash
+   pip install -r requirements.txt
+   ```
+
+2. **Verify Installation**:
+   ```bash
+   python main.py --help
+   ```
+
+## 🎯 Quick Start
+
+### First Time Setup
+```bash
+# Create a new site and start optimizing
+python main.py --site-name "MyOptimizedSite"
 ```
-https://mara-hackathon-api.onrender.com
+
+### Using Existing Site
+```bash
+# Use your existing API key
+python main.py --api-key "your-api-key-here"
 ```
 
-**NOTE**: All API response values listed in this documentation will most likely change during the event. Use these for reference purposes only. 
+### Continuous Optimization
+```bash
+# Run continuous optimization (checks every 5 minutes)
+python main.py --continuous --auto-apply
 
-
-
-### Creating your site and authenticating
-
-#### Create your mining / data center site
-
-Create your `Site` by providing a `Name` to receive your API key (examples provided using HTTPie). You can use whatever name you or your team want, but keep it appropriate!
-
-The most important piece of information here is the `Power` variable, this is your limiting factor in deciding on how much compute your site can offer.
-
+# Custom interval (check every 10 minutes)
+python main.py --continuous --interval 10 --auto-apply
 ```
-http POST https://mara-hackathon-api.onrender.com/sites name=HackFestSite
 
-{
-    "api_key": "XXX",
-    "name": "HackFestSite",
-    "power": 1000000
+## 📊 How It Works
+
+### 1. Data Collection
+The system continuously fetches:
+- **Current Prices**: Energy, hash, and token prices (updated every 5 minutes)
+- **Inventory**: Available machine types and their specifications
+- **Site Status**: Current allocation and performance metrics
+
+### 2. Optimization Algorithm
+The core optimization uses **Linear Programming** to solve:
+
+**Objective**: Maximize Total Profit
+```
+Maximize: Σ(revenue_per_machine × count) - Σ(cost_per_machine × count)
+```
+
+**Constraints**:
+- Total power usage ≤ Site power capacity
+- All machine counts ≥ 0
+- Machine counts must be integers
+
+### 3. Decision Making
+The system evaluates:
+- **Profit Potential**: Expected revenue vs. costs
+- **Market Conditions**: Current price trends
+- **Efficiency**: Profit per watt of power used
+- **Risk**: Stability of current allocation
+
+### 4. Action Execution
+- **Rebalancing Threshold**: Only changes allocation if improvement > 5%
+- **Safety Checks**: Validates constraints before applying
+- **Performance Tracking**: Monitors actual vs. expected results
+
+## 🛠️ Configuration
+
+### Optimization Parameters (`config.py`)
+```python
+OPTIMIZATION_CONFIG = {
+    "max_iterations": 1000,        # Max LP solver iterations
+    "tolerance": 1e-6,             # Numerical tolerance
+    "time_horizon_minutes": 30,    # Planning horizon
+    "rebalance_threshold": 0.05,   # 5% improvement threshold
+    "risk_tolerance": 0.1,         # Risk tolerance level
 }
 ```
 
-Make **SURE** to save this API key as you will need it for future requests. If you forget it, you can always make a new site, but you will lose any progress you may have made. You can always hit the `/sites` endpoint to request information about your current site. You can make as many sites as you want, you will just have to keep track of them.
+### Machine Types
+The system supports all hackathon machine types:
+- **Miners**: Air, Hydro, Immersion cooling
+- **Compute**: ASIC and GPU inference units
 
-#### Authenticating
+## 📈 Performance Metrics
 
-For any future authenticated requests, make you you provide your API Key in an `X-Api-Key` header.
+The system tracks and optimizes for:
 
+### Financial Metrics
+- **Total Revenue**: Sum of all machine revenues
+- **Power Costs**: Energy consumption costs
+- **Net Profit**: Revenue minus costs
+- **Profit Margin**: Profit as percentage of revenue
+- **ROI**: Return on investment
 
+### Efficiency Metrics
+- **Power Efficiency**: Profit per watt
+- **Utilization**: Power usage vs. capacity
+- **Machine Efficiency**: Revenue per machine type
 
-#### Pricing and Inventory
+## 🔧 Advanced Usage
 
-**Pricing**
-
-You can view current historical pricing for energy, inference, and hashrate by going to:
-
-```
-HTTP https://mara-hackathon-api.onrender.com/prices
-[
-    {
-        "energy_price": 0.647889223893815,
-        "hash_price": 8.448180236220946,
-        "timestamp": "2025-06-21T13:00:00",
-        "token_price": 2.91225594861526
-    },
-    {
-        "energy_price": 0.6811324570646737,
-        "hash_price": 9.255307305610396,
-        "timestamp": "2025-06-21T12:55:00",
-        "token_price": 2.532149968985806
-    },
-    {
-        "energy_price": 0.6491505669853906,
-        "hash_price": 8.32135884623703,
-        "timestamp": "2025-06-21T12:50:00",
-        "token_price": 3.0
-    },
-]
+### Manual Optimization
+```bash
+# Run single optimization without auto-apply
+python main.py --api-key "your-key"
+# Review results and choose whether to apply
 ```
 
-Prices are updated every 5 minutes throughout the event.
-
-**Inventory**
-
-You can view available inventory by going to:
-
-```
-HTTP https://mara-hackathon-api.onrender.com/inventory
-
-{
-    "inference": {
-        "asic": {
-            "power": 15000,
-            "tokens": 50000
-        },
-        "gpu": {
-            "power": 5000,
-            "tokens": 1000
-        }
-    },
-    "miners": {
-        "air": {
-            "hashrate": 1000,
-            "power": 3500
-        },
-        "hydro": {
-            "hashrate": 5000,
-            "power": 5000
-        },
-        "immersion": {
-            "hashrate": 10000,
-            "power": 10000
-        }
-    }
-}
-
+### Custom Site Names
+```bash
+# Create site with custom name
+python main.py --site-name "TeamAlphaOptimizer"
 ```
 
-This prices are static, so they won't change throughout the event. Feel free to cache them locally.
-
-
-### Building, managing, and viewing your site
-
-When you are ready to go, start by sending an allocation of machine types. **Note**, you can not exceed the maximum power available at a site
-
-```
-http PUT https://mara-hackathon-api.onrender.com/machines X-Api-Key:XXX asic_miners=10 gpu_compute=30 asic_compute=5 immersion_miners=10
-
-{
-    "air_miners": 0,
-    "asic_compute": 5,
-    "gpu_compute": 30,
-    "hydro_miners": 0,
-    "id": 5,
-    "immersion_miners": 10,
-    "site_id": 2,
-    "updated_at": "2025-06-21T13:17:50.126193"
-}
-
+### Debug Mode
+```bash
+# Check logs for detailed information
+tail -f mara_optimizer.log
 ```
 
-You can view the status of your site by making a GET request:
+## 📋 Command Line Options
+
+| Option | Description | Example |
+|--------|-------------|---------|
+| `--api-key` | Use existing API key | `--api-key "abc123"` |
+| `--site-name` | Create new site with name | `--site-name "MySite"` |
+| `--continuous` | Run continuous optimization | `--continuous` |
+| `--interval` | Minutes between checks | `--interval 10` |
+| `--auto-apply` | Automatically apply optimizations | `--auto-apply` |
+
+## 🎮 Example Session
 
 ```
-http https://mara-hackathon-api.onrender.com/machines X-Api-Key:XXX
+============================================================
+MARA HACKATHON OPTIMIZATION SYSTEM
+============================================================
 
+Enter site name: OptimizerPro
 
-{
-    "air_miners": 0,
-    "asic_compute": 5,
-    "gpu_compute": 30,
-    "hydro_miners": 0,
-    "id": 5,
-    "immersion_miners": 10,
-    "power": {
-        "air_miners": 0,
-        "asic_compute": 75000,
-        "gpu_compute": 150000,
-        "hydro_miners": 0,
-        "immersion_miners": 100000
-    },
-    "revenue": {
-        "air_miners": 0.0,
-        "asic_compute": 212734.43494337276,
-        "gpu_compute": 25528.132193204732,
-        "hydro_miners": 0.0,
-        "immersion_miners": 150596.58003406858
-    },
-    "site_id": 0,
-    "total_power_cost": 238466.35509633605,
-    "total_power_used": 325000,
-    "total_revenue": 388859.1471706461,
-    "updated_at": "2025-06-21T13:17:50.126193"
-}
+Creating new site: OptimizerPro
+✓ Site created successfully!
+API Key: abc12345...
+Max Power: 1,000,000 W
 
+Running optimization...
+
+============================================================
+CURRENT SITE STATUS
+============================================================
+
+Current Machine Allocation:
++------------------+-------+
+| Machine Type     | Count |
++------------------+-------+
+| immersion_miners | 15    |
+| asic_compute     | 8     |
++------------------+-------+
+
+Financial Metrics:
++---------------+-------------+
+| Total Revenue | $ 45,234.56 |
+| Power Cost    | $ 12,345.67 |
+| Net Profit    | $ 32,888.89 |
+| Power Used    | 234,567 W   |
++---------------+-------------+
+
+Current Prices:
++-------------+------------------+
+| Energy Price| $0.0647/W       |
+| Hash Price  | $8.4482/TH      |
+| Token Price | $2.9123/token   |
++-------------+------------------+
+
+============================================================
+OPTIMIZATION RESULTS
+============================================================
+
+Optimal Allocation:
++------------------+----------------+------------+
+| Machine Type     | Optimal Count  | Change     |
++------------------+----------------+------------+
+| immersion_miners | 18             | (+3)       |
+| asic_compute     | 12             | (+4)       |
+| gpu_compute      | 5              | (+5)       |
++------------------+----------------+------------+
+
+Expected Performance:
++------------------+-------------+
+| Expected Profit  | $ 52,345.67 |
+| Profit Margin    | 72.34%      |
+| ROI              | 15.67%      |
+| Power Used       | 298,456 W   |
++------------------+-------------+
+
+Rebalancing recommended!
+Apply optimization? (y/n): y
+
+Applying optimization...
+✓ Optimization applied successfully!
 ```
 
-This is updated anytime you make a site allocation modification or when underlying pricing changes.
+## 🔍 Troubleshooting
 
+### Common Issues
 
-## Feedback, Bugs, Q&A
+1. **API Connection Errors**
+   - Check internet connection
+   - Verify API endpoint is accessible
+   - Ensure API key is valid
 
-If you have any issues with the API or notice any bugs, feel free to contact any staff at the event. If there are any API changes needed throughout the day, we will notify attendees. No downtime is expected.
+2. **Optimization Failures**
+   - Check power constraints
+   - Verify price data availability
+   - Review inventory data
 
+3. **Performance Issues**
+   - Adjust optimization parameters
+   - Check system resources
+   - Review log files
 
-### Additional Resources
+### Log Files
+- **Application Log**: `mara_optimizer.log`
+- **Error Details**: Check log level in config
+- **Performance Data**: Track optimization history
 
-**Bitcoin**
-- https://mempool.space
-- https://data.hashrateindex.com/network-data/bitcoin-hashprice-index
+## 🏆 Competition Strategy
 
-**Inference / Compute**
-- https://inference.net
-- https://sfcompute.com
+### Optimization Tips
+1. **Start Early**: Begin optimization as soon as the hackathon starts
+2. **Monitor Continuously**: Use continuous mode to catch price changes
+3. **Review Insights**: Pay attention to recommendations
+4. **Track Performance**: Monitor actual vs. expected results
 
-**Grid Pricing**
-- https://www.gridstatus.io
+### Advanced Strategies
+1. **Price Prediction**: Analyze historical price trends
+2. **Risk Management**: Balance profit vs. stability
+3. **Market Timing**: Optimize during favorable price conditions
+4. **Resource Allocation**: Focus on highest ROI machines
+
+## 📞 Support
+
+For issues or questions:
+- Check the log files for detailed error information
+- Review the configuration settings
+- Ensure all dependencies are installed correctly
+
+---
