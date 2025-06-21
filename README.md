@@ -1,274 +1,191 @@
-# MARA Hackathon Optimization System
+# AI-Driven Energy Trading System
 
-An intelligent optimization engine that automatically finds the most profitable machine allocation for your mining/data center operations during the MARA Hackathon.
+A comprehensive full-stack application that demonstrates AI-driven arbitrage trading between energy markets, Bitcoin mining, and AI inference compute markets. This system optimizes compute allocation across multiple markets in real-time.
 
 ## 🚀 Features
 
-### Core Optimization
-- **Linear Programming Engine**: Uses advanced mathematical optimization to find the most profitable allocation
-- **Real-time Price Analysis**: Continuously monitors energy, hash, and token prices
-- **Power Constraint Management**: Ensures allocations never exceed your site's power capacity
-- **Profit Maximization**: Automatically calculates and optimizes for maximum profit
+### Core Trading Capabilities
+- **Energy Arbitrage**: Real-time analysis of energy prices across different locations
+- **Bitcoin Mining**: Profitability analysis with halving countdown and difficulty tracking
+- **Inference Market Trading**: AI compute pricing and arbitrage opportunities
+- **Battery Storage**: Time-based energy storage optimization
 
-### Smart Features
-- **Rebalancing Detection**: Only suggests changes when they provide significant improvements
-- **Risk Management**: Configurable risk tolerance and safety thresholds
-- **Performance Insights**: Detailed analysis of expected ROI, profit margins, and efficiency
-- **Continuous Operation**: Can run continuously with automatic periodic optimization
+### AI Trading Agents
+- **Conservative Agent**: Low-risk, high-confidence trading strategies
+- **Aggressive Agent**: High-reward opportunities with calculated risk
+- **Balanced Agent**: Risk-adjusted returns across all market conditions
 
-### User Experience
-- **Beautiful CLI Interface**: Color-coded output with tables and clear metrics
-- **Interactive Mode**: Choose whether to apply optimizations or review first
-- **Comprehensive Logging**: Detailed logs for debugging and performance tracking
-- **Flexible Configuration**: Easy to customize optimization parameters
+### Real-time Features
+- Live market data updates every 30 seconds
+- WebSocket connections for real-time dashboard updates
+- Portfolio tracking with P&L calculations
+- Trading history with confidence scoring
+
+## 🏗️ Architecture
+
+### Backend (Node.js/Express)
+- **Market Simulator**: Generates realistic market data with time-based pricing
+- **AI Trading Agents**: Multiple agents with different risk profiles
+- **WebSocket Server**: Real-time data broadcasting
+- **REST API**: Data endpoints for frontend consumption
+
+### Frontend (React)
+- **Modern UI**: Dark theme with glass morphism effects
+- **Real-time Dashboard**: Live portfolio and market updates
+- **Interactive Charts**: Market visualization and trends
+- **Responsive Design**: Works on desktop and mobile
+
+## 🛠️ Technology Stack
+
+### Backend
+- Node.js with Express
+- Socket.io for real-time communication
+- Node-cron for scheduled tasks
+- UUID for unique identifiers
+
+### Frontend
+- React 18 with hooks
+- Tailwind CSS for styling
+- Lucide React for icons
+- Socket.io-client for real-time updates
 
 ## 📦 Installation
 
-1. **Install Dependencies**:
+### Option 1: Quick Start (Recommended)
+```bash
+# On macOS/Linux
+./start.sh
+
+# On Windows
+start.bat
+```
+
+### Option 2: Manual Installation
+1. **Clone the repository**
    ```bash
-   pip install -r requirements.txt
+   git clone <repository-url>
+   cd ai-energy-trading-system
    ```
 
-2. **Verify Installation**:
+2. **Install dependencies**
    ```bash
-   python main.py --help
+   npm run install-all
    ```
 
-## 🎯 Quick Start
+3. **Start the development servers**
+   ```bash
+   npm start
+   # or
+   npm run dev
+   ```
 
-### First Time Setup
-```bash
-# Create a new site and start optimizing
-python main.py --site-name "MyOptimizedSite"
-```
+This will start:
+- Backend server on `http://localhost:5001`
+- Frontend development server on `http://localhost:3000`
 
-### Using Existing Site
-```bash
-# Use your existing API key
-python main.py --api-key "your-api-key-here"
-```
+## 🎯 Usage
 
-### Continuous Optimization
-```bash
-# Run continuous optimization (checks every 5 minutes)
-python main.py --continuous --auto-apply
+### Dashboard Overview
+The main dashboard provides:
+- **Portfolio Value**: Real-time portfolio tracking with asset breakdown
+- **Market Overview**: Current prices and trends across all markets
+- **Trading History**: Recent AI trading decisions and executions
+- **AI Agents**: Status and performance of trading agents
 
-# Custom interval (check every 10 minutes)
-python main.py --continuous --interval 10 --auto-apply
-```
+### Market Analysis
+- **Energy Map**: Geographic energy price analysis and arbitrage opportunities
+- **Bitcoin Mining**: Mining profitability with halving countdown
+- **Inference Market**: AI compute pricing and trading opportunities
 
-## 📊 How It Works
+### Real-time Features
+- Live market data updates every 30 seconds
+- AI agents automatically make trading decisions
+- Portfolio value updates in real-time
+- Trading history with execution status
 
-### 1. Data Collection
-The system continuously fetches:
-- **Current Prices**: Energy, hash, and token prices (updated every 5 minutes)
-- **Inventory**: Available machine types and their specifications
-- **Site Status**: Current allocation and performance metrics
+## 🔧 Configuration
 
-### 2. Optimization Algorithm
-The core optimization uses **Linear Programming** to solve:
+### Market Parameters
+The system simulates realistic market conditions:
+- **Energy Prices**: Vary by location and time (peak/off-peak hours)
+- **Bitcoin Price**: Volatile with realistic movements
+- **Mining Difficulty**: Updates based on network activity
+- **Inference Prices**: Demand-based pricing for different compute types
 
-**Objective**: Maximize Total Profit
-```
-Maximize: Σ(revenue_per_machine × count) - Σ(cost_per_machine × count)
-```
+### AI Agent Settings
+- **Conservative**: 10% portfolio allocation per trade, 80%+ confidence threshold
+- **Aggressive**: 15% portfolio allocation per trade, 60%+ confidence threshold
+- **Balanced**: 12% portfolio allocation per trade, 70%+ confidence threshold
 
-**Constraints**:
-- Total power usage ≤ Site power capacity
-- All machine counts ≥ 0
-- Machine counts must be integers
+## 📊 Market Simulation
 
-### 3. Decision Making
-The system evaluates:
-- **Profit Potential**: Expected revenue vs. costs
-- **Market Conditions**: Current price trends
-- **Efficiency**: Profit per watt of power used
-- **Risk**: Stability of current allocation
+### Energy Markets
+- **Locations**: Texas, California, New York, Washington, Florida
+- **Pricing**: Time-based with peak/off-peak variations
+- **Demand**: Simulated based on time of day and location
 
-### 4. Action Execution
-- **Rebalancing Threshold**: Only changes allocation if improvement > 5%
-- **Safety Checks**: Validates constraints before applying
-- **Performance Tracking**: Monitors actual vs. expected results
+### Bitcoin Mining
+- **Price Volatility**: Realistic BTC price movements
+- **Difficulty**: Network difficulty simulation
+- **Halving**: Countdown to next block reward halving
+- **Profitability**: Energy cost vs. mining reward analysis
 
-## 🛠️ Configuration
+### Inference Markets
+- **GPU Compute**: High-performance AI training instances
+- **CPU Compute**: General-purpose compute resources
+- **Specialized AI**: Custom hardware and accelerators
 
-### Optimization Parameters (`config.py`)
-```python
-OPTIMIZATION_CONFIG = {
-    "max_iterations": 1000,        # Max LP solver iterations
-    "tolerance": 1e-6,             # Numerical tolerance
-    "time_horizon_minutes": 30,    # Planning horizon
-    "rebalance_threshold": 0.05,   # 5% improvement threshold
-    "risk_tolerance": 0.1,         # Risk tolerance level
-}
-```
+## 🎨 UI Components
 
-### Machine Types
-The system supports all hackathon machine types:
-- **Miners**: Air, Hydro, Immersion cooling
-- **Compute**: ASIC and GPU inference units
+### Design System
+- **Dark Theme**: Professional dark interface
+- **Glass Morphism**: Modern glass-like card effects
+- **Color Coding**: Green (profit), Red (loss), Blue (neutral)
+- **Animations**: Smooth transitions and loading states
 
-## 📈 Performance Metrics
+### Responsive Layout
+- **Desktop**: Full dashboard with all components visible
+- **Tablet**: Optimized grid layouts
+- **Mobile**: Stacked layout for smaller screens
 
-The system tracks and optimizes for:
+## 🔮 Future Enhancements
 
-### Financial Metrics
-- **Total Revenue**: Sum of all machine revenues
-- **Power Costs**: Energy consumption costs
-- **Net Profit**: Revenue minus costs
-- **Profit Margin**: Profit as percentage of revenue
-- **ROI**: Return on investment
+### Potential Integrations
+- **Real Market Data**: Connect to actual energy and crypto APIs
+- **Machine Learning**: Enhanced prediction models
+- **Risk Management**: Advanced portfolio optimization
+- **Multi-Exchange**: Support for multiple trading venues
 
-### Efficiency Metrics
-- **Power Efficiency**: Profit per watt
-- **Utilization**: Power usage vs. capacity
-- **Machine Efficiency**: Revenue per machine type
+### Advanced Features
+- **Backtesting**: Historical strategy performance analysis
+- **Portfolio Optimization**: Modern portfolio theory implementation
+- **Risk Metrics**: Sharpe ratio, VaR, and other risk measures
+- **API Integration**: Real-time data from external sources
 
-## 🔧 Advanced Usage
+## 🤝 Contributing
 
-### Manual Optimization
-```bash
-# Run single optimization without auto-apply
-python main.py --api-key "your-key"
-# Review results and choose whether to apply
-```
+This is a hackathon project demonstrating AI-driven trading concepts. Feel free to:
+- Add new trading strategies
+- Improve the UI/UX
+- Add more market types
+- Enhance the AI algorithms
 
-### Custom Site Names
-```bash
-# Create site with custom name
-python main.py --site-name "TeamAlphaOptimizer"
-```
+## 📝 License
 
-### Debug Mode
-```bash
-# Check logs for detailed information
-tail -f mara_optimizer.log
-```
+MIT License - feel free to use this code for your own projects and hackathons!
 
-## 📋 Command Line Options
+## 🎯 Hackathon Focus
 
-| Option | Description | Example |
-|--------|-------------|---------|
-| `--api-key` | Use existing API key | `--api-key "abc123"` |
-| `--site-name` | Create new site with name | `--site-name "MySite"` |
-| `--continuous` | Run continuous optimization | `--continuous` |
-| `--interval` | Minutes between checks | `--interval 10` |
-| `--auto-apply` | Automatically apply optimizations | `--auto-apply` |
+This project demonstrates:
+- **Multi-market arbitrage**: Energy, crypto, and compute markets
+- **AI-driven decision making**: Multiple agents with different strategies
+- **Real-time optimization**: Live market analysis and trading
+- **Modern full-stack development**: React + Node.js with WebSockets
+- **Professional UI/UX**: Production-ready interface design
 
-## 🎮 Example Session
-
-```
-============================================================
-MARA HACKATHON OPTIMIZATION SYSTEM
-============================================================
-
-Enter site name: OptimizerPro
-
-Creating new site: OptimizerPro
-✓ Site created successfully!
-API Key: abc12345...
-Max Power: 1,000,000 W
-
-Running optimization...
-
-============================================================
-CURRENT SITE STATUS
-============================================================
-
-Current Machine Allocation:
-+------------------+-------+
-| Machine Type     | Count |
-+------------------+-------+
-| immersion_miners | 15    |
-| asic_compute     | 8     |
-+------------------+-------+
-
-Financial Metrics:
-+---------------+-------------+
-| Total Revenue | $ 45,234.56 |
-| Power Cost    | $ 12,345.67 |
-| Net Profit    | $ 32,888.89 |
-| Power Used    | 234,567 W   |
-+---------------+-------------+
-
-Current Prices:
-+-------------+------------------+
-| Energy Price| $0.0647/W       |
-| Hash Price  | $8.4482/TH      |
-| Token Price | $2.9123/token   |
-+-------------+------------------+
-
-============================================================
-OPTIMIZATION RESULTS
-============================================================
-
-Optimal Allocation:
-+------------------+----------------+------------+
-| Machine Type     | Optimal Count  | Change     |
-+------------------+----------------+------------+
-| immersion_miners | 18             | (+3)       |
-| asic_compute     | 12             | (+4)       |
-| gpu_compute      | 5              | (+5)       |
-+------------------+----------------+------------+
-
-Expected Performance:
-+------------------+-------------+
-| Expected Profit  | $ 52,345.67 |
-| Profit Margin    | 72.34%      |
-| ROI              | 15.67%      |
-| Power Used       | 298,456 W   |
-+------------------+-------------+
-
-Rebalancing recommended!
-Apply optimization? (y/n): y
-
-Applying optimization...
-✓ Optimization applied successfully!
-```
-
-## 🔍 Troubleshooting
-
-### Common Issues
-
-1. **API Connection Errors**
-   - Check internet connection
-   - Verify API endpoint is accessible
-   - Ensure API key is valid
-
-2. **Optimization Failures**
-   - Check power constraints
-   - Verify price data availability
-   - Review inventory data
-
-3. **Performance Issues**
-   - Adjust optimization parameters
-   - Check system resources
-   - Review log files
-
-### Log Files
-- **Application Log**: `mara_optimizer.log`
-- **Error Details**: Check log level in config
-- **Performance Data**: Track optimization history
-
-## 🏆 Competition Strategy
-
-### Optimization Tips
-1. **Start Early**: Begin optimization as soon as the hackathon starts
-2. **Monitor Continuously**: Use continuous mode to catch price changes
-3. **Review Insights**: Pay attention to recommendations
-4. **Track Performance**: Monitor actual vs. expected results
-
-### Advanced Strategies
-1. **Price Prediction**: Analyze historical price trends
-2. **Risk Management**: Balance profit vs. stability
-3. **Market Timing**: Optimize during favorable price conditions
-4. **Resource Allocation**: Focus on highest ROI machines
-
-## 📞 Support
-
-For issues or questions:
-- Check the log files for detailed error information
-- Review the configuration settings
-- Ensure all dependencies are installed correctly
-
----
+Perfect for hackathons focusing on:
+- AI/ML applications
+- Financial technology
+- Energy trading
+- Real-time systems
+- Full-stack development 
