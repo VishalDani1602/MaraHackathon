@@ -2,14 +2,17 @@
 @tailwind components;
 @tailwind utilities;
 
+/* Custom CSS for Energy, AI, and Crypto Theme */
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap');
+
 body {
   margin: 0;
-  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
-    'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
-    sans-serif;
+  font-family: 'Inter', sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
-  background-color: #0f172a;
+  background: linear-gradient(135deg, #0f0f23 0%, #1a1a2e 25%, #16213e 50%, #0f3460 75%, #533483 100%);
+  background-attachment: fixed;
+  min-height: 100vh;
   color: #f8fafc;
 }
 
@@ -24,38 +27,169 @@ code {
 }
 
 ::-webkit-scrollbar-track {
-  background: #1e293b;
+  background: rgba(255, 255, 255, 0.1);
+  border-radius: 4px;
 }
 
 ::-webkit-scrollbar-thumb {
-  background: #475569;
+  background: linear-gradient(135deg, #ff6b35, #667eea);
   border-radius: 4px;
 }
 
 ::-webkit-scrollbar-thumb:hover {
-  background: #64748b;
+  background: linear-gradient(135deg, #f7931e, #764ba2);
 }
 
 /* Glass morphism effect */
 .glass {
-  background: rgba(255, 255, 255, 0.1);
+  background: rgba(255, 255, 255, 0.05);
   backdrop-filter: blur(10px);
-  border: 1px solid rgba(255, 255, 255, 0.2);
+  border: 1px solid rgba(255, 255, 255, 0.1);
 }
 
-/* Gradient backgrounds */
-.gradient-primary {
-  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+.glass-dark {
+  background: rgba(0, 0, 0, 0.3);
+  backdrop-filter: blur(15px);
+  border: 1px solid rgba(255, 255, 255, 0.1);
 }
 
-.gradient-success {
-  background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
+/* Animated borders */
+.animated-border {
+  position: relative;
+  background: linear-gradient(45deg, #ff6b35, #f7931e, #667eea, #764ba2, #11998e, #38ef7d);
+  background-size: 400% 400%;
+  animation: borderGlow 3s ease-in-out infinite;
 }
 
-.gradient-warning {
-  background: linear-gradient(135deg, #fa709a 0%, #fee140 100%);
+@keyframes borderGlow {
+  0% { background-position: 0% 50%; }
+  50% { background-position: 100% 50%; }
+  100% { background-position: 0% 50%; }
 }
 
-.gradient-danger {
-  background: linear-gradient(135deg, #ff9a9e 0%, #fecfef 100%);
+/* Floating animation */
+.float {
+  animation: float 6s ease-in-out infinite;
+}
+
+@keyframes float {
+  0% { transform: translateY(0px); }
+  50% { transform: translateY(-10px); }
+  100% { transform: translateY(0px); }
+}
+
+/* Pulse glow effect */
+.pulse-glow {
+  animation: pulseGlow 2s ease-in-out infinite alternate;
+}
+
+@keyframes pulseGlow {
+  from { box-shadow: 0 0 20px rgba(255, 107, 53, 0.3); }
+  to { box-shadow: 0 0 30px rgba(255, 107, 53, 0.6); }
+}
+
+/* Energy flow animation */
+.energy-flow {
+  background: linear-gradient(90deg, transparent, rgba(255, 107, 53, 0.3), transparent);
+  background-size: 200% 100%;
+  animation: energyFlow 2s linear infinite;
+}
+
+@keyframes energyFlow {
+  0% { background-position: -200% 0; }
+  100% { background-position: 200% 0; }
+}
+
+/* Crypto price ticker effect */
+.price-ticker {
+  animation: priceTicker 0.5s ease-out;
+}
+
+@keyframes priceTicker {
+  0% { transform: scale(1); }
+  50% { transform: scale(1.05); }
+  100% { transform: scale(1); }
+}
+
+/* AI neural network background */
+.neural-bg {
+  background-image: 
+    radial-gradient(circle at 20% 80%, rgba(102, 126, 234, 0.1) 0%, transparent 50%),
+    radial-gradient(circle at 80% 20%, rgba(245, 87, 108, 0.1) 0%, transparent 50%),
+    radial-gradient(circle at 40% 40%, rgba(17, 153, 142, 0.1) 0%, transparent 50%);
+}
+
+/* Status indicators */
+.status-online {
+  background: linear-gradient(135deg, #11998e, #38ef7d);
+  animation: statusPulse 2s ease-in-out infinite;
+}
+
+.status-warning {
+  background: linear-gradient(135deg, #ff6b35, #f7931e);
+  animation: statusPulse 1s ease-in-out infinite;
+}
+
+.status-offline {
+  background: linear-gradient(135deg, #667eea, #764ba2);
+}
+
+@keyframes statusPulse {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.7; }
+}
+
+/* Card hover effects */
+.card-hover {
+  transition: all 0.3s ease;
+}
+
+.card-hover:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
+}
+
+/* Energy meter */
+.energy-meter {
+  background: linear-gradient(90deg, #ff6b35 0%, #f7931e 25%, #ffd700 50%, #11998e 75%, #38ef7d 100%);
+  background-size: 200% 100%;
+  animation: energyMeter 3s ease-in-out infinite;
+}
+
+@keyframes energyMeter {
+  0%, 100% { background-position: 0% 50%; }
+  50% { background-position: 100% 50%; }
+}
+
+/* Bitcoin price chart effect */
+.btc-chart {
+  background: linear-gradient(135deg, #f7931e, #ffd700);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+/* AI processing indicator */
+.ai-processing {
+  background: linear-gradient(135deg, #667eea, #764ba2, #f093fb, #f5576c);
+  background-size: 300% 300%;
+  animation: aiProcessing 2s ease-in-out infinite;
+}
+
+@keyframes aiProcessing {
+  0%, 100% { background-position: 0% 50%; }
+  50% { background-position: 100% 50%; }
+}
+
+/* Energy-themed gradients */
+.energy-gradient {
+  background: linear-gradient(135deg, #ff6b35 0%, #f7931e 25%, #ffd700 50%, #ffed4e 75%, #fff200 100%);
+}
+
+.ai-gradient {
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 25%, #f093fb 50%, #f5576c 75%, #4facfe 100%);
+}
+
+.crypto-gradient {
+  background: linear-gradient(135deg, #11998e 0%, #38ef7d 25%, #00d4aa 50%, #00b4db 75%, #0083b0 100%);
 } 

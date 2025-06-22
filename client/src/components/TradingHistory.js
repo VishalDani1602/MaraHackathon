@@ -2,7 +2,7 @@ import React from 'react';
 import { Clock, TrendingUp, TrendingDown, Zap, Bitcoin, Cpu, Battery } from 'lucide-react';
 
 const TradingHistory = ({ tradingHistory, fullView = false }) => {
-  if (!tradingHistory) return null;
+  if (!tradingHistory || !Array.isArray(tradingHistory)) return null;
 
   const formatCurrency = (amount) => {
     return new Intl.NumberFormat('en-US', {
@@ -14,18 +14,18 @@ const TradingHistory = ({ tradingHistory, fullView = false }) => {
   };
 
   const formatTime = (timestamp) => {
-    return new Date(timestamp).toLocaleTimeString();
+    return new Date(timestamp).toLocaleString();
   };
 
   const getTradeIcon = (type) => {
     switch (type) {
-      case 'energy_arbitrage':
+      case 'energy_sell':
         return <Zap className="h-4 w-4 text-yellow-400" />;
-      case 'bitcoin_mining':
+      case 'bitcoin_mine':
         return <Bitcoin className="h-4 w-4 text-orange-400" />;
-      case 'inference_trading':
+      case 'ai_compute':
         return <Cpu className="h-4 w-4 text-blue-400" />;
-      case 'battery_storage':
+      case 'battery_arbitrage':
         return <Battery className="h-4 w-4 text-green-400" />;
       default:
         return <TrendingUp className="h-4 w-4 text-slate-400" />;
@@ -34,13 +34,13 @@ const TradingHistory = ({ tradingHistory, fullView = false }) => {
 
   const getTradeColor = (type) => {
     switch (type) {
-      case 'energy_arbitrage':
+      case 'energy_sell':
         return 'text-yellow-400';
-      case 'bitcoin_mining':
+      case 'bitcoin_mine':
         return 'text-orange-400';
-      case 'inference_trading':
+      case 'ai_compute':
         return 'text-blue-400';
-      case 'battery_storage':
+      case 'battery_arbitrage':
         return 'text-green-400';
       default:
         return 'text-slate-400';
@@ -48,32 +48,21 @@ const TradingHistory = ({ tradingHistory, fullView = false }) => {
   };
 
   const getTradeDescription = (trade) => {
-    switch (trade.type) {
-      case 'energy_arbitrage':
-        return `Buy energy in ${trade.location} for arbitrage`;
-      case 'bitcoin_mining':
-        return `Allocate ${formatCurrency(trade.amount)} for mining`;
-      case 'inference_trading':
-        return `Buy ${trade.computeType} compute at discount`;
-      case 'battery_storage':
-        return `Store energy in ${trade.location}`;
-      default:
-        return trade.action;
-    }
+    return trade.description || `${trade.type.replace('_', ' ')} operation`;
   };
 
-  const getConfidenceColor = (confidence) => {
-    if (confidence >= 0.8) return 'text-green-400';
-    if (confidence >= 0.6) return 'text-yellow-400';
-    return 'text-red-400';
+  const getStatusColor = (status) => {
+    if (status === 'completed') return 'text-green-400';
+    if (status === 'active') return 'text-blue-400';
+    return 'text-yellow-400';
   };
 
-  const displayHistory = fullView ? tradingHistory : tradingHistory.slice(-5);
+  const displayHistory = fullView ? tradingHistory : tradingHistory.slice(-10);
 
   return (
     <div className={`glass rounded-xl p-6 ${fullView ? '' : 'lg:col-span-1'}`}>
       <div className="flex items-center justify-between mb-6">
-        <h2 className="text-xl font-semibold text-white">Trading History</h2>
+        <h2 className="text-xl font-semibold text-white">Operation History</h2>
         <div className="flex items-center space-x-2 text-sm text-slate-400">
           <Clock className="h-4 w-4" />
           <span>Live Updates</span>
@@ -98,24 +87,33 @@ const TradingHistory = ({ tradingHistory, fullView = false }) => {
               <div className="flex items-center justify-between mt-1">
                 <div className="flex items-center space-x-4 text-xs">
                   <span className="text-slate-400">
-                    Amount: {formatCurrency(trade.amount)}
+                    Location: {trade.location?.toUpperCase()}
                   </span>
-                  {trade.expectedProfit && (
-                    <span className="text-green-400">
-                      Expected: +{trade.expectedProfit.toFixed(1)}%
+                  {trade.amount && (
+                    <span className="text-slate-400">
+                      Amount: {trade.amount.toLocaleString()} {
+                        trade.type === 'bitcoin_mine' ? 'TH/s' : 
+                        trade.type === 'ai_compute' ? 'GPUs' : 
+                        trade.type === 'battery_arbitrage' ? 'kW' : 'kWh'
+                      }
                     </span>
                   )}
                 </div>
-                {trade.confidence && (
-                  <div className={`text-xs font-medium ${getConfidenceColor(trade.confidence)}`}>
-                    {(trade.confidence * 100).toFixed(0)}% confidence
-                  </div>
-                )}
+                <div className={`text-xs font-medium ${getStatusColor(trade.status)}`}>
+                  {trade.status}
+                </div>
               </div>
-              {trade.executed && (
-                <div className="flex items-center space-x-2 mt-2">
-                  <div className="w-2 h-2 bg-green-400 rounded-full"></div>
-                  <span className="text-xs text-green-400">Executed</span>
+              {trade.revenue && trade.cost && (
+                <div className="flex items-center space-x-4 mt-2 text-xs">
+                  <span className="text-green-400">
+                    Revenue: {formatCurrency(trade.revenue)}
+                  </span>
+                  <span className="text-red-400">
+                    Cost: {formatCurrency(trade.cost)}
+                  </span>
+                  <span className={`font-medium ${trade.profit >= 0 ? 'text-green-400' : 'text-red-400'}`}>
+                    Profit: {formatCurrency(trade.profit)}
+                  </span>
                 </div>
               )}
             </div>
@@ -123,34 +121,40 @@ const TradingHistory = ({ tradingHistory, fullView = false }) => {
         ))}
       </div>
 
-      {!fullView && tradingHistory.length > 5 && (
+      {!fullView && tradingHistory.length > 10 && (
         <div className="mt-4 text-center">
           <button className="text-sm text-primary-400 hover:text-primary-300 transition-colors">
-            View All Trades
+            View All Operations
           </button>
         </div>
       )}
 
       {fullView && (
         <div className="mt-6 pt-6 border-t border-slate-700">
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-4 text-center">
+          <div className="grid grid-cols-1 md:grid-cols-4 gap-4 text-center">
             <div>
               <div className="text-2xl font-bold text-white">
                 {tradingHistory.length}
               </div>
-              <div className="text-sm text-slate-400">Total Trades</div>
+              <div className="text-sm text-slate-400">Total Operations</div>
             </div>
             <div>
               <div className="text-2xl font-bold text-green-400">
-                {tradingHistory.filter(t => t.executed).length}
+                {tradingHistory.filter(t => t.status === 'completed').length}
               </div>
-              <div className="text-sm text-slate-400">Executed</div>
+              <div className="text-sm text-slate-400">Completed</div>
             </div>
             <div>
               <div className="text-2xl font-bold text-blue-400">
-                {tradingHistory.filter(t => t.confidence >= 0.8).length}
+                {tradingHistory.filter(t => t.status === 'active').length}
               </div>
-              <div className="text-sm text-slate-400">High Confidence</div>
+              <div className="text-sm text-slate-400">Active</div>
+            </div>
+            <div>
+              <div className="text-2xl font-bold text-yellow-400">
+                {formatCurrency(tradingHistory.reduce((sum, t) => sum + (t.profit || 0), 0))}
+              </div>
+              <div className="text-sm text-slate-400">Total Profit</div>
             </div>
           </div>
         </div>
